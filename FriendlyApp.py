@@ -1,0 +1,204 @@
+import tkinter
+from tkinter import *
+
+root = Tk()
+root.title('Pleasant Friend')
+root.geometry('400x790')
+root.resizable(False, False)
+
+def updateDescriptioin():
+    if option.get() == 1:
+        description_label.config(text='Making decisions for your trip, by deciding on the time and value for each activity')
+    elif option.get() == 2:
+        description_label.config(text='Make your purchasing decision, based on price and your need')
+    elif option.get() == 3:
+        description_label.config(text='Divide the shares into 2 equal part among a diverse group of values')
+
+task_list_1 = []
+val_list_1 = []
+wei_list_1 = []
+count1 = 0
+task_list_2 = []
+val_list_2= []
+wei_list_2 = []
+count2 = 0
+task_list_3 = []
+val_list_3 = []
+count3 = 0
+
+def updateListBox():
+    if option.get() == 1:
+        listbox.delete(0, END)
+        for i in range(len(task_list_1)):
+            listbox.insert(END, f'{i+1}. {task_list_1[i].ljust(18, '_')}_{val_list_1[i].ljust(7,'_')}_{wei_list_1[i]}')
+
+def addTask():
+    global count1, count2, count3
+    if option.get() == 1:
+        try:
+            if task_entry1.get() and int(task_entry2.get()) > 0 and int(task_entry3.get()) > 0:
+                task = task_entry1.get() + '\n' + task_entry2.get() + '\n' + task_entry3.get() + '\n'
+                with open('data_1.txt', 'a') as file:
+                    file.write(f'{task}')
+                task_list_1.append(task_entry1.get())
+                val_list_1.append(task_entry2.get())
+                wei_list_1.append(task_entry3.get())
+                task_entry1.delete(0, END)
+                task_entry2.delete(0, END)
+                task_entry3.delete(0, END)
+            else:
+                result_listbox.insert(END, '-->The task must have a name, value ')
+                result_listbox.insert(END, 'and weight must be an interger > 0')
+        except:
+            result_listbox.insert(END, '-->The task must have a name, value ')
+            result_listbox.insert(END, 'and weight must be an interger > 0')
+
+    updateListBox()
+
+def deleteTask():
+    if option.get() == 1:
+        data = str(listbox.get(ANCHOR))
+        num = int(data[:data.find('.')])
+        del(task_list_1[num-1])
+        del(val_list_1[num-1])
+        del(wei_list_1[num-1])
+        l = len(task_list_1)
+        with open('data_1.txt', 'w') as file:
+            for i in range(l):
+                file.write(f'{task_list_1[i]}\n{val_list_1[i]}\n{wei_list_1[i]}\n')
+    updateListBox()
+
+def openDataFile1():
+    if option.get() == 1:
+        try:
+            with open('data_1.txt', 'r') as file:
+                data = file.readlines()
+                l = len(data)
+                for i in range(0, l, 3):
+                    task_list_1.append(data[i])
+                    val_list_1.append(data[i+1])
+                    wei_list_1.append(data[i+2])
+                updateListBox()
+        except:
+            print('Nos')
+            file=open('data_1.txt', 'w')
+            file.close()
+
+icon = PhotoImage(file='task.png')
+root.iconphoto(False, icon)
+topbar_img=PhotoImage(file='topbar.png')
+Label(root, image=topbar_img).pack()
+friend_img = PhotoImage(file='friend.png')
+Label(root, image=friend_img, bg='#32405b').place(x=15, y=10)
+note_img = PhotoImage(file='task.png')
+Label(root, image=note_img, bg='#32405b').place(x=340, y=25)
+heading = Label(root, text='Pleasant Friend', font=('arial',20,'bold')
+              , fg='white', bg='#32405b')
+heading.place(x=95, y=20)
+
+#__radio_options__
+
+frame0 = Frame(root, width=400, height=100)
+frame0.place(x=20, y=100)
+option = IntVar()
+option.set(1)
+radio1 = Radiobutton(frame0, text='option 1', variable=option, value=1,
+                     command=updateDescriptioin, indicatoron=0,
+                     width=10, relief=RAISED, bg='#34a8eb')
+radio2 = Radiobutton(frame0, text='option 2', variable=option, value=2,
+                      command=updateDescriptioin, indicatoron=0, 
+                      width=10, relief=RAISED, bg='#34a8eb')
+radio3 = Radiobutton(frame0, text='option 3', variable=option, value=3,
+                      command=updateDescriptioin, indicatoron=0, 
+                      width=10, relief=RAISED, bg='#34a8eb')
+radio1.pack(side=LEFT, padx=20, expand= True, fill=X)
+radio2.pack(side=LEFT, padx=20, expand= True, fill=X)
+radio3.pack(side=LEFT, padx=20, expand= True, fill=X)
+
+frame01 = Frame(root, width=400, height=100)
+frame01.place(x=50, y=140)
+description_label = Label(frame01, text="Making decisions for your trip, by deciding on the time and value for each activity",
+                           borderwidth=2, relief="solid", padx=10, pady=10, wraplength=250)
+description_label.pack( pady=0, fill=X, padx=20)
+
+#__entry__
+
+header_frame = Frame(root, width=400, height=20)
+header_frame.place(x=8, y=200)
+header1 = Label(header_frame, text='Action', width=22,
+                font=('arial',10,'bold'))
+header2 = Label(header_frame, text='Value', width=8,
+                font=('arial',10,'bold'))
+header3 = Label(header_frame, text='Weight', width=8,
+                font=('arial',10,'bold'))
+header1.pack(side=LEFT, expand=True, fill=X)
+header2.pack(side=LEFT, expand=True, fill=X)
+header3.pack(side=LEFT, expand=True, fill=X)
+
+frame = Frame(root, width=400, height=40, bg='white')
+frame.place(x=8, y=220)
+
+task = StringVar()
+task_entry1 = Entry(frame, width=24, font='arial 10',
+                   bd = 5, highlightbackground='#34a8eb', highlightcolor='#34a8eb',
+                   highlightthickness=2, relief='flat')
+task_entry2 = Entry(frame, width=8, font='arial 10',
+                   bd = 5, highlightbackground='#34a8eb', highlightcolor='#34a8eb',
+                   highlightthickness=2, relief='flat')
+task_entry3 = Entry(frame, width=8, font='arial 10',
+                   bd = 5, highlightbackground='#34a8eb', highlightcolor='#34a8eb',
+                   highlightthickness=2, relief='flat')
+task_entry1.pack(side=LEFT)
+task_entry2.pack(side=LEFT)
+task_entry3.pack(side=LEFT)
+
+task_entry1.focus()
+
+button_add = Button(frame, text='ADD', font='arial 10 bold', 
+                    width=6, bg='#5a95ff', fg='#fff', bd=0,
+                    command=addTask)
+button_add.pack(side=LEFT, padx=5, pady=10)
+
+#__listbox__
+
+frame1 = Frame(root, bd=3, width=700, height=200, bg='#32405b')
+frame1.place(x=7, y=270)
+listbox = Listbox(frame1, font=('Courier New', 12), width=36, height=16,
+                  bg='#32405b', fg='white', cursor='hand2',
+                  selectbackground='#5a95ff')
+listbox.pack(side=LEFT, fill=BOTH, padx=2)
+scroll1 = Scrollbar(frame1)
+scroll1.pack(side=RIGHT, fill = BOTH)
+listbox.config(yscrollcommand=scroll1.set)
+scroll1.config(command=listbox.yview)
+
+#__action__
+
+openDataFile1()
+delete_icon=PhotoImage(file='delete.png')
+Button(root, image=delete_icon, bd=0, command=deleteTask).pack(side=BOTTOM, pady=13)
+
+frame2 = Frame(root, bg='white')
+frame2.place(x=7, y=590)
+header4 = Label(frame2, text='Wanted total value', width=20,
+                font=('arial',10,'bold'))
+header4.pack(side=LEFT, expand=True, fill=X)
+task_entry4 = Entry(frame2, width=8, font='arial 10',
+                   highlightbackground='#34a8eb', highlightcolor='#34a8eb',
+                   highlightthickness=2, relief='flat')
+task_entry4.pack(side=LEFT, expand=True, fill=X)
+
+#__result__
+
+frame02 = Frame(root, bd=3, width=700, height=200, bg='#5a95ff')
+frame02.place(x=7, y=625)
+result_listbox = Listbox(frame02, font='arial 12', width=40, height=4,
+                        bg='#5a95ff', fg='white', cursor='hand2',
+                        selectbackground='#32405b')
+result_listbox.pack(side=LEFT, fill=BOTH, padx=2)
+scroll2 = Scrollbar(frame02)
+scroll2.pack(side=RIGHT, fill = BOTH)
+result_listbox.config(yscrollcommand=scroll2.set)
+scroll2.config(command=result_listbox.yview)
+
+root.mainloop()

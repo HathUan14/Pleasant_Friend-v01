@@ -1,0 +1,15 @@
+shopping
+10
+15
+fishing
+20
+10
+museum
+20
+15
+ancient tower
+20
+12
+beach
+10
+10
