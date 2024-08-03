@@ -13,3 +13,9 @@ ancient tower
 beach
 10
 10
+food festival
+25
+13
+ancient building
+24
+15

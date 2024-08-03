@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import *
+from algorithm import Backpack1
 
 root = Tk()
 root.title('Pleasant Friend')
@@ -34,6 +35,7 @@ def updateListBox():
 
 def addTask():
     global count1, count2, count3
+    result_listbox.delete(0,END)
     if option.get() == 1:
         try:
             if task_entry1.get() and int(task_entry2.get()) > 0 and int(task_entry3.get()) > 0:
@@ -49,7 +51,7 @@ def addTask():
             else:
                 result_listbox.insert(END, '-->The task must have a name, value ')
                 result_listbox.insert(END, 'and weight must be an interger > 0')
-        except:
+        except ValueError:
             result_listbox.insert(END, '-->The task must have a name, value ')
             result_listbox.insert(END, 'and weight must be an interger > 0')
 
@@ -65,7 +67,7 @@ def deleteTask():
         l = len(task_list_1)
         with open('data_1.txt', 'w') as file:
             for i in range(l):
-                file.write(f'{task_list_1[i]}\n{val_list_1[i]}\n{wei_list_1[i]}\n')
+                file.write(f'{task_list_1[i]}\n{val_list_1[i]}\n{wei_list_1[i]}')
     updateListBox()
 
 def openDataFile1():
@@ -75,14 +77,30 @@ def openDataFile1():
                 data = file.readlines()
                 l = len(data)
                 for i in range(0, l, 3):
-                    task_list_1.append(data[i])
-                    val_list_1.append(data[i+1])
-                    wei_list_1.append(data[i+2])
+                    task_list_1.append(data[i][:-1])
+                    val_list_1.append(data[i+1][:-1])
+                    wei_list_1.append(data[i+2][:-1])
                 updateListBox()
         except:
             print('Nos')
             file=open('data_1.txt', 'w')
             file.close()
+
+def calculate():
+    result_listbox.delete(0, END)
+    if option.get() == 1:
+        try:
+            W = int(task_entry4.get())
+            total, res = Backpack1(list(map(int,val_list_1)), list(map(int, wei_list_1)), W) #convert into int
+            result_listbox.insert(END, '-->Tasks highlighted')
+            result_listbox.insert(END, '-->Best total value: '+ str(total))
+            listbox.selection_clear(0, END)
+            for index in res:
+                listbox.select_set(index)
+            # for index in res:
+            #     listbox.itemconfig(index, {'bg': '#ffa500', 'fg': '#32405b'})
+        except ValueError:
+            result_listbox.insert(END, 'The total weight must be an interger > 0')
 
 icon = PhotoImage(file='task.png')
 root.iconphoto(False, icon)
@@ -164,8 +182,8 @@ button_add.pack(side=LEFT, padx=5, pady=10)
 frame1 = Frame(root, bd=3, width=700, height=200, bg='#32405b')
 frame1.place(x=7, y=270)
 listbox = Listbox(frame1, font=('Courier New', 12), width=36, height=16,
-                  bg='#32405b', fg='white', cursor='hand2',
-                  selectbackground='#5a95ff')
+                  bg='#32405b', fg='white', cursor='hand2', selectmode=MULTIPLE,
+                  selectbackground='#ffa500', selectforeground='#32405b')
 listbox.pack(side=LEFT, fill=BOTH, padx=2)
 scroll1 = Scrollbar(frame1)
 scroll1.pack(side=RIGHT, fill = BOTH)
@@ -179,14 +197,18 @@ delete_icon=PhotoImage(file='delete.png')
 Button(root, image=delete_icon, bd=0, command=deleteTask).pack(side=BOTTOM, pady=13)
 
 frame2 = Frame(root, bg='white')
-frame2.place(x=7, y=590)
-header4 = Label(frame2, text='Wanted total value', width=20,
-                font=('arial',10,'bold'))
+frame2.place(x=30, y=585)
+header4 = Label(frame2, text='Wanted total weight', width=20,
+                font=('arial',10,'bold'), bg='white')
 header4.pack(side=LEFT, expand=True, fill=X)
 task_entry4 = Entry(frame2, width=8, font='arial 10',
                    highlightbackground='#34a8eb', highlightcolor='#34a8eb',
                    highlightthickness=2, relief='flat')
 task_entry4.pack(side=LEFT, expand=True, fill=X)
+button_cal = Button(frame2, text='CALC', font='arial 10 bold', 
+                    width=6, bg='#5a95ff', fg='#fff',
+                    command=calculate, relief=FLAT)
+button_cal.pack(side=LEFT, padx=15, pady=10)
 
 #__result__
 

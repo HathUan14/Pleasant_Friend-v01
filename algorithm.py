@@ -1,25 +1,8 @@
-def Backpack1(inputFile, W):
-    wei = []
-    val = []
-    line_count = 0
-    try:
-        with open(inputFile, 'r') as file:
-            for line in file:
-                columns = line.strip().split()
-                if len(columns) >= 2:
-                    wei.append(int(columns[0]))
-                    val.append(int(columns[1]))
-                    line_count += 1
-    except FileNotFoundError:
-        print(f"File {file} does not exist.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    n = line_count
+def Backpack1(val, wei, W):
+    n = len(val)
     F = Backpack1_build_solution_table(W, n, wei, val)
     total, res = Backpack1_trace_and_output_result(F, n, W, wei)
-    print(f"The best fit is {total}, which are:", end=' ')
-    for index in res:
-        print(index, end = ' ')
+    return total, res
 
 def Backpack1_build_solution_table(W, n, wei, val):
     # Solution matrix comprises columns with weight from 0 to W, rows indices are numbers from 0 to n, indicate the solution
@@ -37,7 +20,7 @@ def Backpack1_trace_and_output_result(F, n, W, wei):
     total = F[n][W]
     while n != 0:
         if F[n][W] != F[n - 1][W]: # if an option has been picked, trace it
-            res.append(n)
+            res.append(n - 1)
             W = W - wei[n - 1]
         n = n - 1
     return total, res
@@ -92,7 +75,13 @@ def DivideIntoTwoMostBalance(s):
 
 def main():
     
-    val = [5, 8, 10, 3 , 5 , 7 , 20, 50, 100, 4]
+    val = [15, 8, 10, 3 , 5 , 7 , 2, 20, 55, 4]
+    wei = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    total, res = Backpack1(val, wei, 45)
+    print(total)
+    val_res = [val[i] for i in res]
+    wei_res = [wei[i] for i in res]
+    print(dict(zip(val_res, wei_res)))
     # sum = 99
     # res = FindSubSetSum_trace_and_output_result(val, sum)
     # if res != 0:
@@ -105,6 +94,7 @@ def main():
     # a, b = DivideIntoTwoMostBalance(val)
     # print(a)
     # print(b)
-    Backpack1('input1.txt', 11)
+    
+    #Backpack1('input1.txt', 11)
 
 main()
