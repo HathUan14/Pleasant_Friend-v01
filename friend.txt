@@ -16,3 +16,6 @@ beach
 food festival
 25
 13
+ancient building
+24
+15

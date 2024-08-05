@@ -70,7 +70,7 @@ def DivideIntoTwoMostBalance(s):
             temp = []
             for i in res:
                 temp.append(s.pop(i))
-            return temp, s
+            return temp, s # 2 sublists that have almost equal values
 
 
 def main():

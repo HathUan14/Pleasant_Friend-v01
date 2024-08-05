@@ -10,28 +10,50 @@ root.resizable(False, False)
 def updateDescriptioin():
     if option.get() == 1:
         description_label.config(text='Making decisions for your trip, by deciding on the time and value for each activity')
+        updateListBox()
     elif option.get() == 2:
         description_label.config(text='Make your purchasing decision, based on price and your need')
+        updateListBox()
     elif option.get() == 3:
         description_label.config(text='Divide the shares into 2 equal part among a diverse group of values')
+        updateListBox()
 
 task_list_1 = []
 val_list_1 = []
 wei_list_1 = []
-count1 = 0
 task_list_2 = []
 val_list_2= []
 wei_list_2 = []
-count2 = 0
 task_list_3 = []
 val_list_3 = []
-count3 = 0
 
 def updateListBox():
+    listbox.delete(0, END)
     if option.get() == 1:
-        listbox.delete(0, END)
+        header1.config(width=22)
+        button_add.pack_forget()
+        header3.pack(side=LEFT, expand=True, fill=X)
+        task_entry3.pack(side=LEFT)
+        button_add.pack(side=LEFT, padx=5, pady=10)
+        task_entry1.config(width=24)
         for i in range(len(task_list_1)):
             listbox.insert(END, f'{i+1}. {task_list_1[i].ljust(18, '_')}_{val_list_1[i].ljust(7,'_')}_{wei_list_1[i]}')
+    elif option.get() == 2:
+        header1.config(width=22)
+        button_add.pack_forget()
+        header3.pack(side=LEFT, expand=True, fill=X)
+        task_entry3.pack(side=LEFT)
+        button_add.pack(side=LEFT, padx=5, pady=10)
+        task_entry1.config(width=24)
+        for i in range(len(task_list_2)):
+            listbox.insert(END, f'{i+1}. {task_list_2[i].ljust(18, '_')}_{val_list_2[i].ljust(7,'_')}_{wei_list_2[i]}')
+    elif option.get() == 3:
+        header3.pack_forget()
+        header1.config(width=30)
+        task_entry3.pack_forget()
+        task_entry1.config(width=32)
+        for i in range(len(task_list_3)):
+            listbox.insert(END, f'{i+1}. {task_list_3[i].ljust(25, '_')}_{val_list_3[i].ljust(7,'_')}')
 
 def addTask():
     global count1, count2, count3
@@ -59,31 +81,57 @@ def addTask():
 
 def deleteTask():
     if option.get() == 1:
-        data = str(listbox.get(ANCHOR))
-        num = int(data[:data.find('.')])
-        del(task_list_1[num-1])
-        del(val_list_1[num-1])
-        del(wei_list_1[num-1])
+        for index in reversed(listbox.curselection()): #reversed is for the changed order of the list
+            del(task_list_1[index])
+            del(val_list_1[index])
+            del(wei_list_1[index])
         l = len(task_list_1)
         with open('data_1.txt', 'w') as file:
             for i in range(l):
-                file.write(f'{task_list_1[i]}\n{val_list_1[i]}\n{wei_list_1[i]}')
+                file.write(f'{task_list_1[i]}\n{val_list_1[i]}\n{wei_list_1[i]}\n')
     updateListBox()
 
-def openDataFile1():
+def openDataFile():
     if option.get() == 1:
         try:
             with open('data_1.txt', 'r') as file:
                 data = file.readlines()
                 l = len(data)
                 for i in range(0, l, 3):
-                    task_list_1.append(data[i][:-1])
+                    task_list_1.append(data[i][:-1]) # Not pick the leter '\n'
                     val_list_1.append(data[i+1][:-1])
                     wei_list_1.append(data[i+2][:-1])
                 updateListBox()
         except:
             print('Nos')
             file=open('data_1.txt', 'w')
+            file.close()
+    elif option.get() == 2:
+        try:
+            with open('data_2.txt', 'r') as file:
+                data = file.readlines()
+                l = len(data)
+                for i in range(0, l, 3):
+                    task_list_2.append(data[i][:-1])
+                    val_list_2.append(data[i+1][:-1])
+                    wei_list_2.append(data[i+2][:-1])
+                updateListBox()
+        except:
+            print('Nos')
+            file=open('data_2.txt', 'w')
+            file.close()
+    elif option.get() == 3:
+        try:
+            with open('data_3.txt', 'r') as file:
+                data = file.readlines()
+                l = len(data)
+                for i in range(0, l, 3):
+                    task_list_3.append(data[i][:-1])
+                    val_list_3.append(data[i+1][:-1])
+                updateListBox()
+        except:
+            print('Nos')
+            file=open('data_3.txt', 'w')
             file.close()
 
 def calculate():
@@ -97,8 +145,17 @@ def calculate():
             listbox.selection_clear(0, END)
             for index in res:
                 listbox.select_set(index)
-            # for index in res:
-            #     listbox.itemconfig(index, {'bg': '#ffa500', 'fg': '#32405b'})
+        except ValueError:
+            result_listbox.insert(END, 'The total weight must be an interger > 0')
+    elif option.get() == 2:
+        try:
+            W = int(task_entry4.get())
+            total, res = Backpack1(list(map(int,val_list_2)), list(map(int, wei_list_2)), W) #convert into int
+            result_listbox.insert(END, '-->Items highlighted')
+            result_listbox.insert(END, '-->Best total value: '+ str(total))
+            listbox.selection_clear(0, END)
+            for index in res:
+                listbox.select_set(index)
         except ValueError:
             result_listbox.insert(END, 'The total weight must be an interger > 0')
 
@@ -192,7 +249,7 @@ scroll1.config(command=listbox.yview)
 
 #__action__
 
-openDataFile1()
+openDataFile()
 delete_icon=PhotoImage(file='delete.png')
 Button(root, image=delete_icon, bd=0, command=deleteTask).pack(side=BOTTOM, pady=13)
 
