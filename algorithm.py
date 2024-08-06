@@ -63,25 +63,26 @@ def DivideIntoTwoMostBalance(s):
     n = len(s)
     mid = sum // 2
     while(1):
-        res = FindSubSetSum_trace_and_output_result(s, mid)
-        if (res == 0):
+        s1 = FindSubSetSum_trace_and_output_result(s, mid)
+        if (s1 == 0):
             mid -= 1
         else:
-            temp = []
-            for i in res:
-                temp.append(s.pop(i))
-            return temp, s # 2 sublists that have almost equal values
+            s2 = [i for i in range(0, n)]
+            for i in s1:
+                s2.pop(i)
+            return s1, s2 # 2 sublists that have almost equal values
 
 
 def main():
     
-    val = [15, 8, 10, 3 , 5 , 7 , 2, 20, 55, 4]
-    wei = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    total, res = Backpack1(val, wei, 45)
-    print(total)
-    val_res = [val[i] for i in res]
-    wei_res = [wei[i] for i in res]
-    print(dict(zip(val_res, wei_res)))
+    #val = [15, 8, 10, 3 , 5 , 7 , 2, 20, 55, 4]
+    # wei = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    # total, res = Backpack1(val, wei, 45)
+    # print(total)
+    # val_res = [val[i] for i in res]
+    # wei_res = [wei[i] for i in res]
+    # print(dict(zip(val_res, wei_res)))
+
     # sum = 99
     # res = FindSubSetSum_trace_and_output_result(val, sum)
     # if res != 0:
@@ -92,9 +93,11 @@ def main():
     #     print('No')
 
     # a, b = DivideIntoTwoMostBalance(val)
+    # a = [val[i] for i in a]
+    # b = [val[i] for i in b]
     # print(a)
     # print(b)
+    pass
     
-    #Backpack1('input1.txt', 11)
 
 main()

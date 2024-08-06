@@ -1,25 +1,3 @@
-shopping
-10
-15
-fishing
-20
-10
-museum
-20
-15
-ancient tower
-20
-12
-beach
-10
-10
-food festival
-25
-13
-ancient building
-24
-15
-
 laptop A
 10
 100
@@ -62,30 +40,3 @@ exercise tools
 new chair
 5
 3
-
-abcd
-12
-efgh
-100
-cat12
-44
-Listbx
-120
-LapseTZ
-55
-ThunderDJ
-77
-Const142
-95
-LadibrineE
-88
-McKc
-119
-LoveTofu
-59
-SusKitten
-11
-Redhub
-34
-dRaKeEz
-71
