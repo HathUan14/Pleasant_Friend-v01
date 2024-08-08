@@ -1,4 +1,3 @@
-import tkinter
 from tkinter import *
 from algorithm import Backpack1, DivideIntoTwoMostBalance
 

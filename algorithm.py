@@ -45,8 +45,6 @@ def FindSubSetSum_trace_and_output_result(s, sum):
     F = FindASubSetSum_build_solution_table(s, n, sum)
     if F[n][sum] == False:
         return 0
-    # for i in F:
-    #     print(i)
     res = []
     i, j = n, sum
     while i > 0 and j > 0:
