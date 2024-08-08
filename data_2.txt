@@ -4,30 +4,18 @@ laptop A
 new smartphone
 15
 40
-some book 
-3
-2
-course of CS
-15
-30
 trip to Sapa town
 6
 30
 editor sofware
 3
 7
-movie sofware
-3
-3
 eatout with friends
 5
 20
 coffee 
 2
 7
-buy some stock
-50
-50
 repair motorbike
 5
 30
@@ -37,6 +25,3 @@ learn Chinese
 exercise tools
 8
 20
-new chair
-5
-3
